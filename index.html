@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chăm The Garden - Private Menu</title>
+    <!-- Nhập Font chữ Elegant cho Giá tiền & Tiêu đề -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #f4f0ea;
+            --text-color: #eb2214;
+            --border-color: #d6cec3;
+            --font-main: 'Space Mono', monospace;
+            --font-price: 'Cormorant Garamond', Georgia, serif;
+            --font-title: 'Cinzel', serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 40px;
+        }
+        .page-one {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header-section {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 40px;
+            margin-bottom: 40px;
+        }
+        .brand-top-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #eb2214;
+            margin-bottom: 15px;
+        }
+        .brand-title {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: var(--text-color);
+            margin: 0 0 20px 0;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+        .brand-quote {
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        .brand-desc {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+        .hero-img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            background-color: #eae5dc;
+        }
+        
+        .grid-header {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #eb2214;
+            text-align: right;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .product-card {
+            cursor: pointer;
+            transition: transform 0.3s, opacity 0.3s;
+            position: relative;
+        }
+        .product-card:hover {
+            opacity: 0.9;
+        }
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background-color: #eae5dc;
+            overflow: hidden;
+        }
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .product-info {
+            margin-top: 14px;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+        .product-name {
+            display: block;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        /* CẤU HÌNH FONT VÀ ĐỊNH DẠNG GIÁ ELEGANT */
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            font-family: var(--font-price); /* Font Serif sang trọng */
+        }
+        .product-price-normal {
+            font-size: 1.0rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .product-price-old {
+            color: #8c857b;
+            text-decoration: line-through;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        .product-price-sale {
+            color: #eb2214;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* BADGE SALE & HẾT HÀNG */
+        .out-of-stock-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(235, 34, 20, 0.9);
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+        .sale-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: #eb2214;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        /* POPUP LAYER */
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; z-index: 100; }
+        .texture-layer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; }
+        .texture-layer img { width: 100%; height: 100%; object-fit: cover; }
+        .info-layer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: flex; align-items: center; justify-content: center; z-index: 2; pointer-events: none; padding: 20px; box-sizing: border-box; }
+        .info-layer img { max-width: 90%; max-height: 90vh; object-fit: contain; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .close { position: fixed; top: 30px; right: 40px; font-size: 3rem; cursor: pointer; z-index: 10; background: rgba(0,0,0,0.5); color: #fff; border: none; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; }
+
+        @media (max-width: 768px) {
+            .header-section { grid-template-columns: 1fr; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-one">
+        <div class="header-section">
+            <div>
+                <div class="brand-top-info">
+                    <span>Kaishi 08/2026</span>
+                    <span>Những gì Chăm có:</span>
+                </div>
+                <h1 class="brand-title">Chăm The Garden</h1>
+                <div class="brand-quote">
+                    "Nghệ thuật đối thoại cùng thiên nhiên và sự mộc mạc nguyên bản."
+                </div>
+                <div class="brand-desc">
+                    Bộ sưu tập chậu thủ công men gốm và cây dáng nghệ thuật được tuyển chọn riêng cho không gian tối giản. Mỗi tác phẩm mang một vẻ đẹp độc bản, tôn vinh sự bất hoàn mỹ và thời gian.
+                </div>
+            </div>
+            <div>
+                <img src="https://lh3.googleusercontent.com/d/1QI_7ZjCY3eSm_0jF8sW-1y828YeD5-7h" alt="Concept" class="hero-img">
+            </div>
+        </div>
+
+        <div class="grid-header">
+            CHỌN SẢN PHẨM ĐỂ XEM CHI TIẾT & THÔNG SỐ
+        </div>
+
+        <div class="grid-container" id="product-grid">
+            <!-- Render tự động -->
+        </div>
+    </div>
+
+    <div id="modal" class="modal" onclick="closeModal()">
+        <button class="close" onclick="closeModal()">&times;</button>
+        <div class="texture-layer">
+            <img id="mTextureImg" src="" alt="Texture Chậu Full">
+        </div>
+        <div class="info-layer">
+            <img id="mInfoImg" src="" alt="Mẫu thông tin" onclick="event.stopPropagation()">
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBW7cJlYczNDrEO7Ojjwp5ieqUwqSl7FI8-oZaLBUd4z83fQM5UYsPi6ctOtMntzyuLQ/exec";
+
+        // Hàm chuẩn hóa link Google Drive / Google UserContent
+        // Hàm chuẩn hóa và bóc tách ID Google Drive cực kỳ an toàn
+        function cleanDriveLink(url) {
+            if (!url) return "";
+            let cleanUrl = url.toString().trim();
+            
+            // Tìm kiếm ID (chuỗi ký tự dài ở giữa link) bất kể link bị cắt ngắn hay đầy đủ
+            let match = cleanUrl.match(/(?:[-\w]{25,})/);
+            if (match) {
+                // Nếu tìm thấy một chuỗi ID hợp lệ, ép nó về dạng chuẩn googleusercontent
+                // Lọc bỏ các chuỗi không phải ID nếu lỡ quét nhầm từ "https"
+                let possibleIds = cleanUrl.match(/\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/);
+                if (possibleIds && (possibleIds[1] || possibleIds[2])) {
+                    let id = possibleIds[1] || possibleIds[2];
+                    return `https://lh3.googleusercontent.com/d/${id}`;
+                }
+                // Nếu chuỗi nằm ở dạng lh3 trực tiếp mà bị cụt đuôi, ta cố gắng khôi phục
+                if (cleanUrl.includes('googleusercontent.com/d/')) {
+                    let parts = cleanUrl.split('/d/');
+                    if (parts[1]) {
+                        let cleanId = parts[1].split('/')[0].trim();
+                        return `https://lh3.googleusercontent.com/d/${cleanId}`;
+                    }
+                }
+            }
+            return cleanUrl;
+        }
+
+        // Hàm định dạng tiền tệ sang chuẩn Elegant (VD: 215.000 đ)
+        function formatMoney(amount) {
+            if (!amount && amount !== 0) return "";
+            let num = parseFloat(amount.toString().replace(/[^0-9.-]+/g, ""));
+            if (isNaN(num)) return amount;
+            return num.toLocaleString('vi-VN') + " đ";
+        }
+
+        // Hàm định dạng % Sale (chuyển 0.07 -> 7%, 0.4 -> 40%)
+        function formatPercent(percent) {
+            if (!percent) return "";
+            let num = parseFloat(percent);
+            if (isNaN(num)) return percent;
+            if (num < 1 && num > 0) {
+                num = Math.round(num * 100);
+            }
+            return num + "%";
+        }
+
+        async function loadProducts() {
+            try {
+                let response = await fetch(SCRIPT_URL);
+                let products = await response.json();
+                let gridContainer = document.getElementById('product-grid');
+                gridContainer.innerHTML = "";
+
+                products.forEach(item => {
+                    let tenSp = item["TÊN SP"];
+                    if(!tenSp) return;
+
+                    let trangThai = item["TRẠNG THÁI"] ? item["TRẠNG THÁI"].toString() : "";
+                    let isSoldOut = trangThai.toLowerCase().includes('hết');
+                    
+                    let rawGiaSale = item["GIÁ SALE"];
+                    let hasSale = rawGiaSale !== "" && rawGiaSale !== null && rawGiaSale !== undefined;
+                    
+                    let giaNiemYet = formatMoney(item["GIÁ NIÊM YẾT"]);
+                    let giaSale = formatMoney(rawGiaSale);
+                    let phanTramSale = formatPercent(item["PHẦN TRĂM SALE"]);
+
+                    // Xử lý làm sạch link ảnh triệt để
+                    let imgThumb = cleanDriveLink(item["ẢNH THUMBNAIL"]);
+                    let imgInfo = cleanDriveLink(item["ẢNH INFO"]);
+                    let imgTexture = cleanDriveLink(item["ẢNH TEXTURE"]);
+
+                    let card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    if (!isSoldOut) {
+                        card.setAttribute('onclick', `openModal('${imgInfo}', '${imgTexture}')`);
+                    } else {
+                        card.style.opacity = '0.5';
+                    }
+
+                    let priceHtml = "";
+                    if (hasSale) {
+                        priceHtml = `
+                            <div class="price-container">
+                                <span class="product-price-old">${giaNiemYet}</span>
+                                <span class="product-price-sale">${giaSale}</span>
+                            </div>
+                        `;
+                    } else {
+                        priceHtml = `
+                            <div class="price-container">
+                                <span class="product-price-normal">${giaNiemYet}</span>
+                            </div>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        <div class="image-wrapper">
+                            ${imgThumb ? `<img src="${imgThumb}" class="product-img" alt="${tenSp}" onerror="this.style.display='none'">` : ''}
+                            ${hasSale && phanTramSale ? `<div class="sale-badge">-${phanTramSale}</div>` : ''}
+                            ${isSoldOut ? '<div class="out-of-stock-badge">HẾT HÀNG</div>' : ''}
+                        </div>
+                        <div class="product-info">
+                            <span class="product-name">${tenSp}</span>
+                            ${priceHtml}
+                        </div>
+                    `;
+                    gridContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu:", error);
+            }
+        }
+
+        function openModal(infoImg, textureImg) {
+            if(!infoImg && !textureImg) return;
+            document.getElementById('mInfoImg').src = infoImg;
+            document.getElementById('mTextureImg').src = textureImg;
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
